@@ -7,13 +7,17 @@ def addTwoNumbers(l1, l2):
     carryOver = 0;
     dummyHead = ListNode(0);
     cur = dummyHead;
-    while (l1.next != None or l2.next != None):
-        digitOne = (l1.next != None) ? l1.val : 0;
-        digitTwo = (l2.next != None) ? l2.val : 0;
+    while (l1 != None or l2 != None):
+        digitOne = l1.val if (l1 != None) else 0;
+        digitTwo = l2.val if (l2 != None) else 0;
         curVal = digitOne + digitTwo + carryOver;
         carryOver = curVal / 10;
         cur.next = ListNode(curVal % 10);
         cur = cur.next;
-        if (l1.next != None) l1 = l1.next;
-        if (l2.next != None) l2 = l2.next;
+        if (l1 != None):
+            l1 = l1.next;
+        if (l2 != None):
+            l2 = l2.next;
+    if (l1 == None and l2 == None and carryOver == 1):
+        cur.next = ListNode(1);
     return dummyHead.next;
