@@ -1,34 +1,49 @@
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-    switchSmallerToFirst(nums1, nums2);
-    int m = nums1.size(), n = nums2.size();
+    vector<int> A, B;
+    if (nums1.size() < nums2.size())
+        A = nums1, B = nums2;
+    else
+        A = nums2, B = nums1;
+    
+    int m = A.size(), n = B.size();
     int imin = 0, imax = m;
-    int halfSize = (nums1.size() + nums2.size() + 1)/2;
+    int halfSize = (m + n + 1)/2;
+    int i, j;
     while (true)
     {
         i = (imin + imax)/2;
         j = halfSize - i;
-        if ((i == 0 or j == n or (nums1[i-1] <= nums2[j]))
-             and (j == 0 or i == m or (nums2[j-1] <= num1[i])))
+        if ((i == 0 or j == n or (A[i-1] <= B[j]))
+             and (j == 0 or i == m or (B[j-1] <= A[i])))
         {
+            int leftMax;
+            if (i == 0)
+                leftMax = B[j-1];
+            else if (j == 0)
+                leftMax = A[i-1];
+            else
+                leftMax = max(A[i-1], B[j-1]);
             
+            if ((n+m)%2 == 1)
+                return leftMax;
+            
+            int rightMax;
+            if (j == n)
+                rightMax = A[i];
+            else if (i == m)
+                rightMax = B[j];
+            else
+                rightMax = min(A[i], B[j]);
+            
+            return (leftMax + rightMax) / 2.0;   
         }
-        else if (nums1[cutOne-1] > nums2[cutTwo])
+        else if (A[i-1] > B[j])
         {
             imax = i - 1;
         }
-        else if (nums1[cutOne] < nums2[cutTwo-1])
+        else if (A[i] < B[j-1])
         {
             imin = i + 1;
         }
-    }
-}
-
-void switchSmallerToFirst(vector<int>* nums1, vector<int>* nums2)
-{
-    if (nums1->size() > nums2->size())
-    {
-        vector<int>* tmp = nums1;
-        nums1 = nums2;
-        nums2 = tmp;
     }
 }
