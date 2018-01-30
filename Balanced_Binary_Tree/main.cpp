@@ -1,19 +1,13 @@
 bool isBalanced(TreeNode* root) {
-    if (maxHeight(root) - minHeight(root) < 2)
+    if (root == NULL)
         return true;
-    return false;
+    if (abs(height(root->left) - height(root->right)) > 1)
+        return false;
+    return isBalanced(root->left) && isBalanced(root->right);
 }
 
-int minHeight(TreeNode* root){
+int height(TreeNode* root) {
     if (root == NULL)
         return 0;
-    else 
-        return 1 + min(minHeight(root->left), minHeight(root->right));
-}
-
-int maxHeight(TreeNode* root){
-    if (root == NULL)
-        return 0;
-    else 
-        return 1 + max(maxHeight(root->left), maxHeight(root->right));
+    return 1 + max(height(root->left), height(root->right));
 }
