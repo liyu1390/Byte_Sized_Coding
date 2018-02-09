@@ -1,43 +1,24 @@
 bool isSymmetric(TreeNode* root) {
     if (!root) return true;
     
-    vector<TreeNode*> leftTree, rightTree;
-    leftTree.push_back(root->left);
-    rightTree.push_back(root->right);
+    vector<TreeNode*> treeStack;
     TreeNode *leftNode, *rightNode;
     
-    while (!leftTree.empty() && !rightTree.empty())
+    treeStack.push_back(root->left);
+    treeStack.push_back(root->right);
+    while (!treeStack.empty())
     {
-        leftNode = leftTree.back();
-        rightNode = rightTree.back();
-        
-        leftTree.pop_back();
-        rightTree.pop_back();
-        
-        if (leftNode && rightNode)
-        {
-            if (leftNode->val != rightNode->val)
-            {
-                return false;
-            }
-            else
-            {
-                leftTree.push_back(leftNode->left);
-                leftTree.push_back(leftNode->right);
-                rightTree.push_back(rightNode->right);
-                rightTree.push_back(rightNode->left);
-            }
-        }
-        else if (!leftNode && !rightNode)
-        {
-            continue;
-        }
-        else
-        {
-            return false;
-        }
+        leftNode = treeStack.back();
+        treeStack.pop_back();
+        rightNode = treeStack.back();
+        treeStack.pop_back();
+        if (leftNode == NULL && rightNode == NULL) continue;
+        if (leftNode == NULL || rightNode == NULL) return false;
+        if (leftNode->val != rightNode->val) return false;
+        treeStack.push_back(leftNode->left);
+        treeStack.push_back(rightNode->right);
+        treeStack.push_back(leftNode->right);
+        treeStack.push_back(rightNode->left);
     }
-    if (leftTree.empty() && rightTree.empty())
-        return true;
-    return false; 
+    return true;
 }
