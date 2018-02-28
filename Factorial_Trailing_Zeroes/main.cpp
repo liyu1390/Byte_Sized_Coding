@@ -1,10 +1,8 @@
 int trailingZeroes(int n) {
-    long base = 5;
     int numFives = 0;
-    while (base <= n)
+    for (long base = 5; base <= n; base *= 5)
     {
         numFives += floor(n/base);
-        base *= 5;
     }
     return numFives;
 }
