@@ -1,37 +1,25 @@
 string getPermutation(int n, int k) {
-    vector<int> outputVec = createSet(n);
-    permutate(outputVec, n, 0, k-1);
-    return createString(outputVec);
+    vector<char> outputVec = createSet(n);
+    return permutate(outputVec, n, k-1);
 }
 
-void permutate(vector<int> &perm, int n, int start, int k)
+string permutate(vector<char> &perm, int n, int k)
 {
-    int cycle = k/factorial(n-start-1);
-    if (cycle != 0)
-    {
-        int tmp = perm[cycle+start];
-        perm.erase(perm.begin()+cycle+start);
-        perm.insert(perm.begin()+start, tmp);
-    }
-    if (k%factorial(n-start-1) == 0)
-        return;
-    permutate(perm, n, start+1, k%factorial(n-start-1));
+    string output;
+    if (n == 0)
+        return output;
+    int cycle = k/factorial(n-1);
+    output += perm[cycle];
+    perm.erase(perm.begin()+cycle);
+    return output + permutate(perm, n-1, k%factorial(n-1));
 }
 
-
-vector<int> createSet(int n)
+vector<char> createSet(int n)
 {
-    vector<int> output;
+    vector<char> output;
     for(int i = 1; i <= n; i++)
-        output.push_back(i);
+        output.push_back('0' + i);
     return output;
-}
-
-string createString(const vector<int> &perm)
-{
-    std::stringstream result;
-    std::copy(perm.begin(), perm.end(), std::ostream_iterator<int>(result, ""));
-    return result.str();
 }
 
 int factorial(int n)
