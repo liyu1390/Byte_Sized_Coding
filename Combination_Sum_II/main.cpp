@@ -12,14 +12,18 @@ vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
 
 void getCombSumSets(vector<vector<int>>& ret, vector<int>& curComb, vector<int>& candidates, vector<bool>& usedTracker, int remainder, int startIndex)
 {
-    if (remainder <= 0)
+    if (remainder == 0)
     {
-        if (remainder == 0)
-            ret.push_back(vector<int>(curComb));  
+        ret.push_back(vector<int>(curComb));  
         return;
     }
     
     int size = candidates.size();
+    
+    if (startIndex >= size || candidates[startIndex] > remainder)
+    {
+        return;
+    }
     
     for(int i = startIndex; i < size; i++)
     {
