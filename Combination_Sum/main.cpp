@@ -2,33 +2,24 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
     vector<vector<int>> ret;
     vector<int> curComb;
     sort(candidates.begin(), candidates.end());
-    findCombSums(ret, curComb, candidates, 0, target);
+    findCombSums(ret, curComb, candidates, target, 0);
     return ret;
 }
 
 //assume candidates has unique elements and sorted in order.
-//returns true if we have found a candidate.
-void findCombSums(vector<vector<int>>& ret, vector<int>& curComb, vector<int>& candidates, int checkInd, int remainder)
+void findCombSums(vector<vector<int>>& ret, vector<int>& curComb, vector<int>& candidates, int remainder, int start)
 {
+    if (remainder < 0)
+        return;
     if (remainder == 0)
     {
         ret.push_back(vector<int>(curComb));
         return;
     }
-    if (checkInd >= candidates.size() || candidates[checkInd] > remainder) 
-        return;
-    
-    int candidate = candidates[checkInd];
-    int maxRep = remainder/candidate;
-    int i;
-    for(i = 0; i < maxRep; i++)
+    for(int i = start; i < candidates.size(); i++)
     {
-        curComb.push_back(candidate);
-    }
-    for(; i > 0; i--)
-    {
-        findCombSums(ret, curComb, candidates, checkInd+1, remainder - candidate*i);
+        curComb.push_back(candidates[i]);
+        findCombSums(ret, curComb, candidates, remainder - candidates[i], i);
         curComb.pop_back();
     }
-    findCombSums(ret, curComb, candidates, checkInd+1, remainder);   
 }
