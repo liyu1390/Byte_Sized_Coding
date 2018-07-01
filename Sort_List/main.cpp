@@ -1,42 +1,70 @@
 ListNode* sortList(ListNode* head) {
-    auto secondHead = splitAndReturnSecondHalf(head, lengthOfList(head));
-    if (secondHead == NULL)
-    {
+    if (!head || !head->next)
         return head;
+    
+    auto len = lengthOfList(head);
+    
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode *cur, *right, *left, *tail;
+    for(int step = 1; step < len; step <<= 1)
+    {
+        cur = dummy.next;
+        tail = &dummy;
+        while (cur)
+        {
+            left = cur;
+            right = splitList(left, step);
+            cur = splitList(right, step);
+            tail = mergeSortedAndReturnTail(left, right, tail);
+        }
     }
-    return mergeTwoSortedList(sortList(head), sortList(secondHead));
+    
+    return dummy.next;
 }
 
-ListNode* mergeTwoSortedList(ListNode* head1, ListNode* head2)
+//split the list into 2 lists, 1 with n items and the rest. Return the head of the rest.
+ListNode* splitList(ListNode* head, int n)
 {
-    if (head2 == NULL)
-        return head1;
-    ListNode tempRoot(0);
-    ListNode* slider = &tempRoot;
-    while(head1 != NULL && head2 != NULL)
+    if (head == NULL)
+        return NULL;
+    while(--n != 0)
+    {
+        head = head->next;
+        if (head == NULL)
+            return NULL;
+    }
+    ListNode* secondHead = head->next;
+    head->next = NULL;
+    return secondHead;
+}
+
+//merge two sorted lists, append to the tail, and return the new tail.
+ListNode* mergeSortedAndReturnTail(ListNode* head1, ListNode* head2, ListNode* tail)
+{
+    ListNode* cur = tail;
+    while(head1 && head2)
     {
         if (head1->val <= head2->val)
         {
-            slider->next = head1;
-            slider = head1;
+            cur->next = head1;
+            cur = head1;
             head1 = head1->next;
         }
         else
         {
-            slider->next = head2;
-            slider = head2;
+            cur->next = head2;
+            cur = head2;
             head2 = head2->next;
         }
     }
-    if (head2 == NULL)
+
+    cur->next = head1 ? head1 : head2;
+    while(cur->next)
     {
-        slider->next = head1;
+        cur = cur->next;
     }
-    else if (head1 == NULL)
-    {
-        slider->next = head2;
-    }
-    return tempRoot.next;
+    return cur;
 }
 
 int lengthOfList(ListNode* head)
@@ -48,17 +76,4 @@ int lengthOfList(ListNode* head)
         head = head->next;
     }
     return counter;
-}
-
-ListNode* splitAndReturnSecondHalf(ListNode* head, int lengthOfList)
-{
-    if (lengthOfList <= 1)
-        return NULL;
-    for (int i = 0; i < std::ceil(lengthOfList/2.0) - 1; i++)
-    {
-        head = head->next;
-    }
-    ListNode* secondHead = head->next;
-    head->next = NULL;
-    return secondHead;
 }
